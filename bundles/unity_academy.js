@@ -5,6 +5,7 @@ require => {
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __pow = Math.pow;
   var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
   }) : x)(function (x) {
@@ -628,9 +629,9 @@ require => {
           {
             Object.freeze(emptyObject);
           }
-          function Component(props, context2, updater) {
+          function Component(props, context, updater) {
             this.props = props;
-            this.context = context2;
+            this.context = context;
             this.refs = emptyObject;
             this.updater = updater || ReactNoopUpdateQueue;
           }
@@ -667,9 +668,9 @@ require => {
           }
           function ComponentDummy() {}
           ComponentDummy.prototype = Component.prototype;
-          function PureComponent2(props, context2, updater) {
+          function PureComponent2(props, context, updater) {
             this.props = props;
-            this.context = context2;
+            this.context = context;
             this.refs = emptyObject;
             this.updater = updater || ReactNoopUpdateQueue;
           }
@@ -725,8 +726,8 @@ require => {
             if (typeof type === "object") {
               switch (type.$$typeof) {
                 case REACT_CONTEXT_TYPE:
-                  var context2 = type;
-                  return getContextName(context2) + ".Consumer";
+                  var context = type;
+                  return getContextName(context) + ".Consumer";
                 case REACT_PROVIDER_TYPE:
                   var provider = type;
                   return getContextName(provider._context) + ".Provider";
@@ -1083,14 +1084,14 @@ require => {
             }
             return subtreeCount;
           }
-          function mapChildren(children, func, context2) {
+          function mapChildren(children, func, context) {
             if (children == null) {
               return children;
             }
             var result = [];
             var count = 0;
             mapIntoArray(children, result, "", "", function (child) {
-              return func.call(context2, child, count++);
+              return func.call(context, child, count++);
             });
             return result;
           }
@@ -1129,7 +1130,7 @@ require => {
                 }
               }
             }
-            var context2 = {
+            var context = {
               $$typeof: REACT_CONTEXT_TYPE,
               _calculateChangedBits: calculateChangedBits,
               _currentValue: defaultValue,
@@ -1138,9 +1139,9 @@ require => {
               Provider: null,
               Consumer: null
             };
-            context2.Provider = {
+            context.Provider = {
               $$typeof: REACT_PROVIDER_TYPE,
-              _context: context2
+              _context: context
             };
             var hasWarnedAboutUsingNestedContextConsumers = false;
             var hasWarnedAboutUsingConsumerProvider = false;
@@ -1148,8 +1149,8 @@ require => {
             {
               var Consumer = {
                 $$typeof: REACT_CONTEXT_TYPE,
-                _context: context2,
-                _calculateChangedBits: context2._calculateChangedBits
+                _context: context,
+                _calculateChangedBits: context._calculateChangedBits
               };
               Object.defineProperties(Consumer, {
                 Provider: {
@@ -1158,34 +1159,34 @@ require => {
                       hasWarnedAboutUsingConsumerProvider = true;
                       error("Rendering <Context.Consumer.Provider> is not supported and will be removed in a future major release. Did you mean to render <Context.Provider> instead?");
                     }
-                    return context2.Provider;
+                    return context.Provider;
                   },
                   set: function (_Provider) {
-                    context2.Provider = _Provider;
+                    context.Provider = _Provider;
                   }
                 },
                 _currentValue: {
                   get: function () {
-                    return context2._currentValue;
+                    return context._currentValue;
                   },
                   set: function (_currentValue) {
-                    context2._currentValue = _currentValue;
+                    context._currentValue = _currentValue;
                   }
                 },
                 _currentValue2: {
                   get: function () {
-                    return context2._currentValue2;
+                    return context._currentValue2;
                   },
                   set: function (_currentValue2) {
-                    context2._currentValue2 = _currentValue2;
+                    context._currentValue2 = _currentValue2;
                   }
                 },
                 _threadCount: {
                   get: function () {
-                    return context2._threadCount;
+                    return context._threadCount;
                   },
                   set: function (_threadCount) {
-                    context2._threadCount = _threadCount;
+                    context._threadCount = _threadCount;
                   }
                 },
                 Consumer: {
@@ -1194,12 +1195,12 @@ require => {
                       hasWarnedAboutUsingNestedContextConsumers = true;
                       error("Rendering <Context.Consumer.Consumer> is not supported and will be removed in a future major release. Did you mean to render <Context.Consumer> instead?");
                     }
-                    return context2.Consumer;
+                    return context.Consumer;
                   }
                 },
                 displayName: {
                   get: function () {
-                    return context2.displayName;
+                    return context.displayName;
                   },
                   set: function (displayName) {
                     if (!hasWarnedAboutDisplayNameOnConsumer) {
@@ -1209,13 +1210,13 @@ require => {
                   }
                 }
               });
-              context2.Consumer = Consumer;
+              context.Consumer = Consumer;
             }
             {
-              context2._currentRenderer = null;
-              context2._currentRenderer2 = null;
+              context._currentRenderer = null;
+              context._currentRenderer2 = null;
             }
-            return context2;
+            return context;
           }
           var Uninitialized = -1;
           var Pending = 0;
@@ -10045,8 +10046,8 @@ require => {
             if (typeof type === "object") {
               switch (type.$$typeof) {
                 case REACT_CONTEXT_TYPE:
-                  var context2 = type;
-                  return getContextName(context2) + ".Consumer";
+                  var context = type;
+                  return getContextName(context) + ".Consumer";
                 case REACT_PROVIDER_TYPE:
                   var provider = type;
                   return getContextName(provider._context) + ".Provider";
@@ -11989,10 +11990,10 @@ require => {
               passiveBrowserEventsSupported = false;
             }
           }
-          function invokeGuardedCallbackProd(name, func, context2, a, b, c, d, e, f) {
+          function invokeGuardedCallbackProd(name, func, context, a, b, c, d, e, f) {
             var funcArgs = Array.prototype.slice.call(arguments, 3);
             try {
-              func.apply(context2, funcArgs);
+              func.apply(context, funcArgs);
             } catch (error2) {
               this.onError(error2);
             }
@@ -12001,7 +12002,7 @@ require => {
           {
             if (typeof window !== "undefined" && typeof window.dispatchEvent === "function" && typeof document !== "undefined" && typeof document.createEvent === "function") {
               var fakeNode = document.createElement("react");
-              invokeGuardedCallbackImpl = function invokeGuardedCallbackDev(name, func, context2, a, b, c, d, e, f) {
+              invokeGuardedCallbackImpl = function invokeGuardedCallbackDev(name, func, context, a, b, c, d, e, f) {
                 if (!(typeof document !== "undefined")) {
                   {
                     throw Error("The `document` global was defined when React was initialized, but is not defined anymore. This can happen in a test environment if a component schedules an update from an asynchronous callback, but the test has already finished running. To solve this, you can either unmount the component at the end of your test (and ensure that any asynchronous operations get canceled in `componentWillUnmount`), or you can change the test itself to be asynchronous.");
@@ -12022,7 +12023,7 @@ require => {
                 function callCallback2() {
                   didCall = true;
                   restoreAfterDispatch();
-                  func.apply(context2, funcArgs);
+                  func.apply(context, funcArgs);
                   didError = false;
                 }
                 var error2;
@@ -12077,12 +12078,12 @@ require => {
               caughtError = error2;
             }
           };
-          function invokeGuardedCallback(name, func, context2, a, b, c, d, e, f) {
+          function invokeGuardedCallback(name, func, context, a, b, c, d, e, f) {
             hasError = false;
             caughtError = null;
             invokeGuardedCallbackImpl$1.apply(reporter, arguments);
           }
-          function invokeGuardedCallbackAndCatchFirstError(name, func, context2, a, b, c, d, e, f) {
+          function invokeGuardedCallbackAndCatchFirstError(name, func, context, a, b, c, d, e, f) {
             invokeGuardedCallback.apply(this, arguments);
             if (hasError) {
               var error2 = clearCaughtError();
@@ -13432,9 +13433,9 @@ require => {
                 if (!Interface.hasOwnProperty(_propName)) {
                   continue;
                 }
-                var normalize = Interface[_propName];
-                if (normalize) {
-                  this[_propName] = normalize(nativeEvent);
+                var normalize2 = Interface[_propName];
+                if (normalize2) {
+                  this[_propName] = normalize2(nativeEvent);
                 } else {
                   this[_propName] = nativeEvent[_propName];
                 }
@@ -16411,18 +16412,18 @@ require => {
               if (instance && instance.__reactInternalMemoizedUnmaskedChildContext === unmaskedContext) {
                 return instance.__reactInternalMemoizedMaskedChildContext;
               }
-              var context2 = {};
+              var context = {};
               for (var key in contextTypes) {
-                context2[key] = unmaskedContext[key];
+                context[key] = unmaskedContext[key];
               }
               {
                 var name = getComponentName(type) || "Unknown";
-                checkPropTypes(contextTypes, context2, "context", name);
+                checkPropTypes(contextTypes, context, "context", name);
               }
               if (instance) {
-                cacheContext(workInProgress2, unmaskedContext, context2);
+                cacheContext(workInProgress2, unmaskedContext, context);
               }
-              return context2;
+              return context;
             }
           }
           function hasContextChanged() {
@@ -16448,14 +16449,14 @@ require => {
               pop(contextStackCursor, fiber);
             }
           }
-          function pushTopLevelContextObject(fiber, context2, didChange) {
+          function pushTopLevelContextObject(fiber, context, didChange) {
             {
               if (!(contextStackCursor.current === emptyContextObject)) {
                 {
                   throw Error("Unexpected context found on stack. This error is likely caused by a bug in React. Please file an issue.");
                 }
               }
-              push(contextStackCursor, context2, fiber);
+              push(contextStackCursor, context, fiber);
               push(didPerformWorkStackCursor, didChange, fiber);
             }
           }
@@ -16984,31 +16985,31 @@ require => {
             }
           }
           function pushProvider(providerFiber, nextValue) {
-            var context2 = providerFiber.type._context;
+            var context = providerFiber.type._context;
             {
-              push(valueCursor, context2._currentValue, providerFiber);
-              context2._currentValue = nextValue;
+              push(valueCursor, context._currentValue, providerFiber);
+              context._currentValue = nextValue;
               {
-                if (context2._currentRenderer !== void 0 && context2._currentRenderer !== null && context2._currentRenderer !== rendererSigil) {
+                if (context._currentRenderer !== void 0 && context._currentRenderer !== null && context._currentRenderer !== rendererSigil) {
                   error("Detected multiple renderers concurrently rendering the same context provider. This is currently unsupported.");
                 }
-                context2._currentRenderer = rendererSigil;
+                context._currentRenderer = rendererSigil;
               }
             }
           }
           function popProvider(providerFiber) {
             var currentValue = valueCursor.current;
             pop(valueCursor, providerFiber);
-            var context2 = providerFiber.type._context;
+            var context = providerFiber.type._context;
             {
-              context2._currentValue = currentValue;
+              context._currentValue = currentValue;
             }
           }
-          function calculateChangedBits(context2, newValue, oldValue) {
+          function calculateChangedBits(context, newValue, oldValue) {
             if (objectIs(oldValue, newValue)) {
               return 0;
             } else {
-              var changedBits = typeof context2._calculateChangedBits === "function" ? context2._calculateChangedBits(oldValue, newValue) : MAX_SIGNED_31_BIT_INT;
+              var changedBits = typeof context._calculateChangedBits === "function" ? context._calculateChangedBits(oldValue, newValue) : MAX_SIGNED_31_BIT_INT;
               {
                 if ((changedBits & MAX_SIGNED_31_BIT_INT) !== changedBits) {
                   error("calculateChangedBits: Expected the return value to be a 31-bit integer. Instead received: %s", changedBits);
@@ -17034,7 +17035,7 @@ require => {
               node = node.return;
             }
           }
-          function propagateContextChange(workInProgress2, context2, changedBits, renderLanes2) {
+          function propagateContextChange(workInProgress2, context, changedBits, renderLanes2) {
             var fiber = workInProgress2.child;
             if (fiber !== null) {
               fiber.return = workInProgress2;
@@ -17046,7 +17047,7 @@ require => {
                 nextFiber = fiber.child;
                 var dependency = list.firstContext;
                 while (dependency !== null) {
-                  if (dependency.context === context2 && (dependency.observedBits & changedBits) !== 0) {
+                  if (dependency.context === context && (dependency.observedBits & changedBits) !== 0) {
                     if (fiber.tag === ClassComponent) {
                       var update = createUpdate(NoTimestamp, pickArbitraryLane(renderLanes2));
                       update.tag = ForceUpdate;
@@ -17104,22 +17105,22 @@ require => {
               }
             }
           }
-          function readContext(context2, observedBits) {
+          function readContext(context, observedBits) {
             {
               if (isDisallowedContextReadInDEV) {
                 error("Context can only be read while React is rendering. In classes, you can read it in the render method or getDerivedStateFromProps. In function components, you can read it directly in the function body, but not inside Hooks like useReducer() or useMemo().");
               }
             }
-            if (lastContextWithAllBitsObserved === context2) ; else if (observedBits === false || observedBits === 0) ; else {
+            if (lastContextWithAllBitsObserved === context) ; else if (observedBits === false || observedBits === 0) ; else {
               var resolvedObservedBits;
               if (typeof observedBits !== "number" || observedBits === MAX_SIGNED_31_BIT_INT) {
-                lastContextWithAllBitsObserved = context2;
+                lastContextWithAllBitsObserved = context;
                 resolvedObservedBits = MAX_SIGNED_31_BIT_INT;
               } else {
                 resolvedObservedBits = observedBits;
               }
               var contextItem = {
-                context: context2,
+                context,
                 observedBits: resolvedObservedBits,
                 next: null
               };
@@ -17139,7 +17140,7 @@ require => {
                 lastContextDependency = lastContextDependency.next = contextItem;
               }
             }
-            return context2._currentValue;
+            return context._currentValue;
           }
           var UpdateState = 0;
           var ReplaceState = 1;
@@ -17444,13 +17445,13 @@ require => {
               currentlyProcessingQueue = null;
             }
           }
-          function callCallback(callback, context2) {
+          function callCallback(callback, context) {
             if (!(typeof callback === "function")) {
               {
                 throw Error("Invalid argument passed as callback. Expected a function. Instead received: " + callback);
               }
             }
-            callback.call(context2);
+            callback.call(context);
           }
           function resetHasForceUpdateBeforeProcessing() {
             hasForceUpdate = false;
@@ -17715,7 +17716,7 @@ require => {
           function constructClassInstance(workInProgress2, ctor, props) {
             var isLegacyContextConsumer = false;
             var unmaskedContext = emptyContextObject;
-            var context2 = emptyContextObject;
+            var context = emptyContextObject;
             var contextType = ctor.contextType;
             {
               if (("contextType" in ctor)) {
@@ -17739,24 +17740,24 @@ require => {
               }
             }
             if (typeof contextType === "object" && contextType !== null) {
-              context2 = readContext(contextType);
+              context = readContext(contextType);
             } else {
               unmaskedContext = getUnmaskedContext(workInProgress2, ctor, true);
               var contextTypes = ctor.contextTypes;
               isLegacyContextConsumer = contextTypes !== null && contextTypes !== void 0;
-              context2 = isLegacyContextConsumer ? getMaskedContext(workInProgress2, unmaskedContext) : emptyContextObject;
+              context = isLegacyContextConsumer ? getMaskedContext(workInProgress2, unmaskedContext) : emptyContextObject;
             }
             {
               if (workInProgress2.mode & StrictMode) {
                 disableLogs();
                 try {
-                  new ctor(props, context2);
+                  new ctor(props, context);
                 } finally {
                   reenableLogs();
                 }
               }
             }
-            var instance = new ctor(props, context2);
+            var instance = new ctor(props, context);
             var state = workInProgress2.memoizedState = instance.state !== null && instance.state !== void 0 ? instance.state : null;
             adoptClassInstance(workInProgress2, instance);
             {
@@ -17797,7 +17798,7 @@ require => {
               }
             }
             if (isLegacyContextConsumer) {
-              cacheContext(workInProgress2, unmaskedContext, context2);
+              cacheContext(workInProgress2, unmaskedContext, context);
             }
             return instance;
           }
@@ -18813,14 +18814,14 @@ require => {
             pop(rootInstanceStackCursor, fiber);
           }
           function getHostContext() {
-            var context2 = requiredContext(contextStackCursor$1.current);
-            return context2;
+            var context = requiredContext(contextStackCursor$1.current);
+            return context;
           }
           function pushHostContext(fiber) {
             var rootInstance = requiredContext(rootInstanceStackCursor.current);
-            var context2 = requiredContext(contextStackCursor$1.current);
-            var nextContext = getChildHostContext(context2, fiber.type);
-            if (context2 === nextContext) {
+            var context = requiredContext(contextStackCursor$1.current);
+            var nextContext = getChildHostContext(context, fiber.type);
+            if (context === nextContext) {
               return;
             }
             push(contextFiberStackCursor, fiber, fiber);
@@ -20129,8 +20130,8 @@ require => {
               error("Do not call Hooks inside useEffect(...), useMemo(...), or other built-in Hooks. You can only call Hooks at the top level of your React function. For more information, see https://reactjs.org/link/rules-of-hooks");
             };
             HooksDispatcherOnMountInDEV = {
-              readContext: function (context2, observedBits) {
-                return readContext(context2, observedBits);
+              readContext: function (context, observedBits) {
+                return readContext(context, observedBits);
               },
               useCallback: function (callback, deps) {
                 currentHookNameInDev = "useCallback";
@@ -20138,10 +20139,10 @@ require => {
                 checkDepsAreArrayDev(deps);
                 return mountCallback(callback, deps);
               },
-              useContext: function (context2, observedBits) {
+              useContext: function (context, observedBits) {
                 currentHookNameInDev = "useContext";
                 mountHookTypesDev();
-                return readContext(context2, observedBits);
+                return readContext(context, observedBits);
               },
               useEffect: function (create, deps) {
                 currentHookNameInDev = "useEffect";
@@ -20228,18 +20229,18 @@ require => {
               unstable_isNewReconciler: enableNewReconciler
             };
             HooksDispatcherOnMountWithHookTypesInDEV = {
-              readContext: function (context2, observedBits) {
-                return readContext(context2, observedBits);
+              readContext: function (context, observedBits) {
+                return readContext(context, observedBits);
               },
               useCallback: function (callback, deps) {
                 currentHookNameInDev = "useCallback";
                 updateHookTypesDev();
                 return mountCallback(callback, deps);
               },
-              useContext: function (context2, observedBits) {
+              useContext: function (context, observedBits) {
                 currentHookNameInDev = "useContext";
                 updateHookTypesDev();
-                return readContext(context2, observedBits);
+                return readContext(context, observedBits);
               },
               useEffect: function (create, deps) {
                 currentHookNameInDev = "useEffect";
@@ -20322,18 +20323,18 @@ require => {
               unstable_isNewReconciler: enableNewReconciler
             };
             HooksDispatcherOnUpdateInDEV = {
-              readContext: function (context2, observedBits) {
-                return readContext(context2, observedBits);
+              readContext: function (context, observedBits) {
+                return readContext(context, observedBits);
               },
               useCallback: function (callback, deps) {
                 currentHookNameInDev = "useCallback";
                 updateHookTypesDev();
                 return updateCallback(callback, deps);
               },
-              useContext: function (context2, observedBits) {
+              useContext: function (context, observedBits) {
                 currentHookNameInDev = "useContext";
                 updateHookTypesDev();
-                return readContext(context2, observedBits);
+                return readContext(context, observedBits);
               },
               useEffect: function (create, deps) {
                 currentHookNameInDev = "useEffect";
@@ -20416,18 +20417,18 @@ require => {
               unstable_isNewReconciler: enableNewReconciler
             };
             HooksDispatcherOnRerenderInDEV = {
-              readContext: function (context2, observedBits) {
-                return readContext(context2, observedBits);
+              readContext: function (context, observedBits) {
+                return readContext(context, observedBits);
               },
               useCallback: function (callback, deps) {
                 currentHookNameInDev = "useCallback";
                 updateHookTypesDev();
                 return updateCallback(callback, deps);
               },
-              useContext: function (context2, observedBits) {
+              useContext: function (context, observedBits) {
                 currentHookNameInDev = "useContext";
                 updateHookTypesDev();
-                return readContext(context2, observedBits);
+                return readContext(context, observedBits);
               },
               useEffect: function (create, deps) {
                 currentHookNameInDev = "useEffect";
@@ -20510,9 +20511,9 @@ require => {
               unstable_isNewReconciler: enableNewReconciler
             };
             InvalidNestedHooksDispatcherOnMountInDEV = {
-              readContext: function (context2, observedBits) {
+              readContext: function (context, observedBits) {
                 warnInvalidContextAccess();
-                return readContext(context2, observedBits);
+                return readContext(context, observedBits);
               },
               useCallback: function (callback, deps) {
                 currentHookNameInDev = "useCallback";
@@ -20520,11 +20521,11 @@ require => {
                 mountHookTypesDev();
                 return mountCallback(callback, deps);
               },
-              useContext: function (context2, observedBits) {
+              useContext: function (context, observedBits) {
                 currentHookNameInDev = "useContext";
                 warnInvalidHookAccess();
                 mountHookTypesDev();
-                return readContext(context2, observedBits);
+                return readContext(context, observedBits);
               },
               useEffect: function (create, deps) {
                 currentHookNameInDev = "useEffect";
@@ -20619,9 +20620,9 @@ require => {
               unstable_isNewReconciler: enableNewReconciler
             };
             InvalidNestedHooksDispatcherOnUpdateInDEV = {
-              readContext: function (context2, observedBits) {
+              readContext: function (context, observedBits) {
                 warnInvalidContextAccess();
-                return readContext(context2, observedBits);
+                return readContext(context, observedBits);
               },
               useCallback: function (callback, deps) {
                 currentHookNameInDev = "useCallback";
@@ -20629,11 +20630,11 @@ require => {
                 updateHookTypesDev();
                 return updateCallback(callback, deps);
               },
-              useContext: function (context2, observedBits) {
+              useContext: function (context, observedBits) {
                 currentHookNameInDev = "useContext";
                 warnInvalidHookAccess();
                 updateHookTypesDev();
-                return readContext(context2, observedBits);
+                return readContext(context, observedBits);
               },
               useEffect: function (create, deps) {
                 currentHookNameInDev = "useEffect";
@@ -20728,9 +20729,9 @@ require => {
               unstable_isNewReconciler: enableNewReconciler
             };
             InvalidNestedHooksDispatcherOnRerenderInDEV = {
-              readContext: function (context2, observedBits) {
+              readContext: function (context, observedBits) {
                 warnInvalidContextAccess();
-                return readContext(context2, observedBits);
+                return readContext(context, observedBits);
               },
               useCallback: function (callback, deps) {
                 currentHookNameInDev = "useCallback";
@@ -20738,11 +20739,11 @@ require => {
                 updateHookTypesDev();
                 return updateCallback(callback, deps);
               },
-              useContext: function (context2, observedBits) {
+              useContext: function (context, observedBits) {
                 currentHookNameInDev = "useContext";
                 warnInvalidHookAccess();
                 updateHookTypesDev();
-                return readContext(context2, observedBits);
+                return readContext(context, observedBits);
               },
               useEffect: function (create, deps) {
                 currentHookNameInDev = "useEffect";
@@ -21110,21 +21111,21 @@ require => {
                 }
               }
             }
-            var context2;
+            var context;
             {
               var unmaskedContext = getUnmaskedContext(workInProgress2, Component, true);
-              context2 = getMaskedContext(workInProgress2, unmaskedContext);
+              context = getMaskedContext(workInProgress2, unmaskedContext);
             }
             var nextChildren;
             prepareToReadContext(workInProgress2, renderLanes2);
             {
               ReactCurrentOwner$1.current = workInProgress2;
               setIsRendering(true);
-              nextChildren = renderWithHooks(current2, workInProgress2, Component, nextProps, context2, renderLanes2);
+              nextChildren = renderWithHooks(current2, workInProgress2, Component, nextProps, context, renderLanes2);
               if (workInProgress2.mode & StrictMode) {
                 disableLogs();
                 try {
-                  nextChildren = renderWithHooks(current2, workInProgress2, Component, nextProps, context2, renderLanes2);
+                  nextChildren = renderWithHooks(current2, workInProgress2, Component, nextProps, context, renderLanes2);
                 } finally {
                   reenableLogs();
                 }
@@ -21399,10 +21400,10 @@ require => {
               workInProgress2.flags |= Placement;
             }
             var props = workInProgress2.pendingProps;
-            var context2;
+            var context;
             {
               var unmaskedContext = getUnmaskedContext(workInProgress2, Component, false);
-              context2 = getMaskedContext(workInProgress2, unmaskedContext);
+              context = getMaskedContext(workInProgress2, unmaskedContext);
             }
             prepareToReadContext(workInProgress2, renderLanes2);
             var value;
@@ -21419,7 +21420,7 @@ require => {
               }
               setIsRendering(true);
               ReactCurrentOwner$1.current = workInProgress2;
-              value = renderWithHooks(null, workInProgress2, Component, props, context2, renderLanes2);
+              value = renderWithHooks(null, workInProgress2, Component, props, context, renderLanes2);
               setIsRendering(false);
             }
             workInProgress2.flags |= PerformedWork;
@@ -21465,7 +21466,7 @@ require => {
                 if (workInProgress2.mode & StrictMode) {
                   disableLogs();
                   try {
-                    value = renderWithHooks(null, workInProgress2, Component, props, context2, renderLanes2);
+                    value = renderWithHooks(null, workInProgress2, Component, props, context, renderLanes2);
                   } finally {
                     reenableLogs();
                   }
@@ -21976,7 +21977,7 @@ require => {
           var hasWarnedAboutUsingNoValuePropOnContextProvider = false;
           function updateContextProvider(current2, workInProgress2, renderLanes2) {
             var providerType = workInProgress2.type;
-            var context2 = providerType._context;
+            var context = providerType._context;
             var newProps = workInProgress2.pendingProps;
             var oldProps = workInProgress2.memoizedProps;
             var newValue = newProps.value;
@@ -21995,13 +21996,13 @@ require => {
             pushProvider(workInProgress2, newValue);
             if (oldProps !== null) {
               var oldValue = oldProps.value;
-              var changedBits = calculateChangedBits(context2, newValue, oldValue);
+              var changedBits = calculateChangedBits(context, newValue, oldValue);
               if (changedBits === 0) {
                 if (oldProps.children === newProps.children && !hasContextChanged()) {
                   return bailoutOnAlreadyFinishedWork(current2, workInProgress2, renderLanes2);
                 }
               } else {
-                propagateContextChange(workInProgress2, context2, changedBits, renderLanes2);
+                propagateContextChange(workInProgress2, context, changedBits, renderLanes2);
               }
             }
             var newChildren = newProps.children;
@@ -22010,17 +22011,17 @@ require => {
           }
           var hasWarnedAboutUsingContextAsConsumer = false;
           function updateContextConsumer(current2, workInProgress2, renderLanes2) {
-            var context2 = workInProgress2.type;
+            var context = workInProgress2.type;
             {
-              if (context2._context === void 0) {
-                if (context2 !== context2.Consumer) {
+              if (context._context === void 0) {
+                if (context !== context.Consumer) {
                   if (!hasWarnedAboutUsingContextAsConsumer) {
                     hasWarnedAboutUsingContextAsConsumer = true;
                     error("Rendering <Context> directly is not supported and will be removed in a future major release. Did you mean to render <Context.Consumer> instead?");
                   }
                 }
               } else {
-                context2 = context2._context;
+                context = context._context;
               }
             }
             var newProps = workInProgress2.pendingProps;
@@ -22031,7 +22032,7 @@ require => {
               }
             }
             prepareToReadContext(workInProgress2, renderLanes2);
-            var newValue = readContext(context2, newProps.unstable_observedBits);
+            var newValue = readContext(context, newProps.unstable_observedBits);
             var newChildren;
             {
               ReactCurrentOwner$1.current = workInProgress2;
@@ -26464,11 +26465,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               }
             }
             var lane = requestUpdateLane(current$1);
-            var context2 = getContextForSubtree(parentComponent);
+            var context = getContextForSubtree(parentComponent);
             if (container.context === null) {
-              container.context = context2;
+              container.context = context;
             } else {
-              container.pendingContext = context2;
+              container.pendingContext = context;
             }
             {
               if (isRendering && current !== null && !didWarnAboutNestedUpdates) {
@@ -28213,8 +28214,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             if (typeof type === "object") {
               switch (type.$$typeof) {
                 case REACT_CONTEXT_TYPE:
-                  var context2 = type;
-                  return getContextName(context2) + ".Consumer";
+                  var context = type;
+                  return getContextName(context) + ".Consumer";
                 case REACT_PROVIDER_TYPE:
                   var provider = type;
                   return getContextName(provider._context) + ".Provider";
@@ -28927,10 +28928,18 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   var unity_academy_exports = {};
   __export(unity_academy_exports, {
     add_impulse_force: () => add_impulse_force,
+    add_vector: () => add_vector,
     apply_rigidbody: () => apply_rigidbody,
+    copy_position: () => copy_position,
+    copy_rotation: () => copy_rotation,
+    copy_scale: () => copy_scale,
+    cross: () => cross,
     delta_time: () => delta_time,
     destroy: () => destroy,
+    dot: () => dot,
+    gameobject_distance: () => gameobject_distance,
     get_angular_velocity: () => get_angular_velocity,
+    get_custom_prop: () => get_custom_prop,
     get_key: () => get_key,
     get_key_down: () => get_key_down,
     get_key_up: () => get_key_up,
@@ -28940,19 +28949,32 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     get_rotation_euler: () => get_rotation_euler,
     get_scale: () => get_scale,
     get_velocity: () => get_velocity,
+    get_x: () => get_x,
+    get_y: () => get_y,
+    get_z: () => get_z,
+    gui_button: () => gui_button,
+    gui_label: () => gui_label,
     init_unity_academy_2d: () => init_unity_academy_2d,
     init_unity_academy_3d: () => init_unity_academy_3d,
     instantiate: () => instantiate,
+    instantiate_empty: () => instantiate_empty,
     instantiate_sprite: () => instantiate_sprite,
+    look_at: () => look_at,
+    magnitude: () => magnitude,
+    normalize: () => normalize,
     on_collision_enter: () => on_collision_enter,
     on_collision_exit: () => on_collision_exit,
     on_collision_stay: () => on_collision_stay,
     play_animator_state: () => play_animator_state,
+    point_distance: () => point_distance,
     remove_collider_components: () => remove_collider_components,
+    request_for_main_camera_control: () => request_for_main_camera_control,
     rotate_world: () => rotate_world,
     same_gameobject: () => same_gameobject,
+    scale_vector: () => scale_vector,
     set_angular_drag: () => set_angular_drag,
     set_angular_velocity: () => set_angular_velocity,
+    set_custom_prop: () => set_custom_prop,
     set_drag: () => set_drag,
     set_mass: () => set_mass,
     set_position: () => set_position,
@@ -28962,14 +28984,17 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     set_update: () => set_update,
     set_use_gravity: () => set_use_gravity,
     set_velocity: () => set_velocity,
-    translate_world: () => translate_world
+    translate_local: () => translate_local,
+    translate_world: () => translate_world,
+    vector3: () => vector3,
+    zero_vector: () => zero_vector
   });
   init_define_process();
   init_define_process();
-  var import_context = __toESM(__require("js-slang/context"), 1);
   init_define_process();
   init_define_process();
   var UNITY_ACADEMY_BACKEND_URL = "https://unity-academy.s3.ap-southeast-1.amazonaws.com/";
+  var BUILD_NAME = "ua-frontend-prod";
   var import_react = __toESM(require_react(), 1);
   var import_react_dom = __toESM(require_react_dom(), 1);
   var classes_exports = {};
@@ -29994,8 +30019,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   var React2 = __toESM(require_react());
   var AbstractPureComponent2 = (function (_super) {
     __extends(AbstractPureComponent22, _super);
-    function AbstractPureComponent22(props, context2) {
-      var _this = _super.call(this, props, context2) || this;
+    function AbstractPureComponent22(props, context) {
+      var _this = _super.call(this, props, context) || this;
       _this.timeoutIds = [];
       _this.requestIds = [];
       _this.clearTimeouts = function () {
@@ -34466,6 +34491,57 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     AnchorButton2.displayName = ("").concat(DISPLAYNAME_PREFIX, ".AnchorButton");
     return AnchorButton2;
   })(AbstractButton);
+  init_define_process();
+  var Vector3 = class {
+    constructor(x, y, z) {
+      this.x = 0;
+      this.y = 0;
+      this.z = 0;
+      this.x = x;
+      this.y = y;
+      this.z = z;
+    }
+    toString() {
+      return `(${this.x}, ${this.y}, ${this.z})`;
+    }
+  };
+  function checkVector3Parameter(parameter) {
+    if (typeof parameter !== "object") {
+      throw new Error(`The given parameter is not a valid 3D vector! Wrong parameter type: ${typeof parameter}`);
+    }
+    if (typeof parameter.x !== "number" || typeof parameter.y !== "number" || typeof parameter.z !== "number") {
+      throw new Error("The given parameter is not a valid 3D vector!");
+    }
+  }
+  function makeVector3D(x, y, z) {
+    return new Vector3(x, y, z);
+  }
+  function scaleVector(vector, factor) {
+    return new Vector3(vector.x * factor, vector.y * factor, vector.z * factor);
+  }
+  function addVector(vectorA, vectorB) {
+    return new Vector3(vectorA.x + vectorB.x, vectorA.y + vectorB.y, vectorA.z + vectorB.z);
+  }
+  function dotProduct(vectorA, vectorB) {
+    return vectorA.x * vectorB.x + vectorA.y * vectorB.y + vectorA.z * vectorB.z;
+  }
+  function crossProduct(vectorA, vectorB) {
+    return new Vector3(vectorA.y * vectorB.z - vectorB.y * vectorA.z, vectorB.x * vectorA.z - vectorA.x * vectorB.z, vectorA.x * vectorB.y - vectorB.x * vectorA.y);
+  }
+  function vectorMagnitude(vector) {
+    return Math.sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+  }
+  function normalizeVector(vector) {
+    const magnitude2 = vectorMagnitude(vector);
+    if (magnitude2 === 0) return new Vector3(0, 0, 0);
+    return new Vector3(vector.x / magnitude2, vector.y / magnitude2, vector.z / magnitude2);
+  }
+  function zeroVector() {
+    return new Vector3(0, 0, 0);
+  }
+  function pointDistance(pointA, pointB) {
+    return Math.sqrt(__pow(pointB.x - pointA.x, 2) + __pow(pointB.y - pointA.y, 2) + __pow(pointB.z - pointA.z, 2));
+  }
   var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
   function getInstance() {
     return window.unityAcademyContext;
@@ -34548,12 +34624,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       getInstance().firstTimeLoadUnityApplication();
     }
   };
-  var buildName = "ua-frontend-prod";
   var UNITY_CONFIG = {
-    loaderUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.loader.js`,
-    dataUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.data`,
-    frameworkUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.framework.js`,
-    codeUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${buildName}.wasm`,
+    loaderUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.loader.js`,
+    dataUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.data.gz`,
+    frameworkUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.framework.js.gz`,
+    codeUrl: `${UNITY_ACADEMY_BACKEND_URL}frontend/${BUILD_NAME}.wasm.gz`,
     streamingAssetsUrl: `${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles`,
     companyName: "Wang Zihan @ NUS SoC 2026",
     productName: "Unity Academy (Source Academy Embedding Version)",
@@ -34577,10 +34652,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         keyboardInputInfo: {}
       };
       this.targetFrameRate = 30;
+      this.latestUserAgreementVersion = "unknown";
+      this.getLatestUserAgreementVersion();
       window.unityAcademyContext = this;
       document.body.appendChild(this.unityContainerElement);
       import_react_dom.default.render((0, import_jsx_runtime.jsx)(UnityComponent, {}), this.unityContainerElement);
       this.setShowUnityComponent(0);
+      this.isShowingUnityAcademy = false;
       this.gameObjectIdentifierWrapperClass = GameObjectIdentifier;
       this.makeGameObjectDataStorage("MainCameraFollowingTarget");
     }
@@ -34620,6 +34698,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }
     setShowUnityComponent(resolution) {
       const toShow = resolution > 0;
+      this.isShowingUnityAcademy = toShow;
       const sendMessageFunctionName = "SendMessage";
       if (toShow) {
         this.unityContainerElement.style.visibility = "visible";
@@ -34659,7 +34738,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       this.resetModuleData();
       if (this.unityInstance !== null) {
         const sendMessageFunctionName = "SendMessage";
-        this.unityInstance[sendMessageFunctionName]("GameManager", "ResetApplication");
+        this.unityInstance[sendMessageFunctionName]("GameManager", "ResetSession");
       }
     }
     resetModuleData() {
@@ -34672,6 +34751,37 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }
     isUnityInstanceReady() {
       return this.unityInstanceState === "Ready";
+    }
+    getLatestUserAgreementVersion() {
+      const jsonUrl = `${UNITY_ACADEMY_BACKEND_URL}user_agreement.json`;
+      const xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          this.latestUserAgreementVersion = JSON.parse(xhr.responseText).version;
+        }
+      };
+      xhr.open("GET", jsonUrl, true);
+      xhr.send();
+    }
+    getUserAgreementStatus() {
+      const agreedUserAgreementVersion = localStorage.getItem("unity_academy_agreed_user_agreement_version");
+      if (agreedUserAgreementVersion === null || agreedUserAgreementVersion === "unagreed" || agreedUserAgreementVersion === "unknown") {
+        return "unagreed";
+      }
+      if (this.latestUserAgreementVersion === "unknown") {
+        return "unagreed";
+      }
+      if (agreedUserAgreementVersion !== this.latestUserAgreementVersion) {
+        return "new_user_agreement";
+      }
+      return "agreed";
+    }
+    setUserAgreementStatus(agree) {
+      if (agree) {
+        localStorage.setItem("unity_academy_agreed_user_agreement_version", this.latestUserAgreementVersion);
+      } else {
+        localStorage.setItem("unity_academy_agreed_user_agreement_version", "unagreed");
+      }
     }
     instantiateInternal(prefabName) {
       let prefabExists = false;
@@ -34698,6 +34808,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       this.dispatchStudentAction(`instantiate2DSpriteUrl|${sourceImageUrl}|${gameObjectIdentifier}`);
       return new GameObjectIdentifier(gameObjectIdentifier);
     }
+    instantiateEmptyGameObjectInternal() {
+      const gameObjectIdentifier = `EmptyGameObject_${this.gameObjectIdentifierSerialCounter}`;
+      this.gameObjectIdentifierSerialCounter++;
+      this.makeGameObjectDataStorage(gameObjectIdentifier);
+      this.dispatchStudentAction(`instantiateEmptyGameObject|${gameObjectIdentifier}`);
+      return new GameObjectIdentifier(gameObjectIdentifier);
+    }
     destroyGameObjectInternal(gameObjectIdentifier) {
       this.dispatchStudentAction(`destroyGameObject|${gameObjectIdentifier.gameObjectIdentifier}`);
     }
@@ -34709,23 +34826,12 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         onCollisionStayMethod: null,
         onCollisionExitMethod: null,
         transform: {
-          position: {
-            x: 0,
-            y: 0,
-            z: 0
-          },
-          rotation: {
-            x: 0,
-            y: 0,
-            z: 0
-          },
-          scale: {
-            x: 1,
-            y: 1,
-            z: 1
-          }
+          position: zeroVector(),
+          rotation: zeroVector(),
+          scale: new Vector3(1, 1, 1)
         },
         rigidbody: null,
+        customProperties: {},
         isDestroyed: false
       };
     }
@@ -34770,11 +34876,46 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       gameObject.transform.position.y += y;
       gameObject.transform.position.z += z;
     }
+    translateLocalInternal(gameObjectIdentifier, x, y, z) {
+      const gameObject = this.getStudentGameObject(gameObjectIdentifier);
+      const rotation = gameObject.transform.rotation;
+      const rx = rotation.x * Math.PI / 180;
+      const ry = rotation.y * Math.PI / 180;
+      const rz = rotation.z * Math.PI / 180;
+      const cos = Math.cos;
+      const sin = Math.sin;
+      const rotationMatrix = [[cos(ry) * cos(rz), -cos(ry) * sin(rz), sin(ry)], [cos(rx) * sin(rz) + sin(rx) * sin(ry) * cos(rz), cos(rx) * cos(rz) - sin(rx) * sin(ry) * sin(rz), -sin(rx) * cos(ry)], [sin(rx) * sin(rz) - cos(rx) * sin(ry) * cos(rz), cos(rx) * sin(ry) * sin(rz) + sin(rx) * cos(rz), cos(rx) * cos(ry)]];
+      const finalWorldTranslateVector = [rotationMatrix[0][0] * x + rotationMatrix[0][1] * y + rotationMatrix[0][2] * z, rotationMatrix[1][0] * x + rotationMatrix[1][1] * y + rotationMatrix[1][2] * z, rotationMatrix[2][0] * x + rotationMatrix[2][1] * y + rotationMatrix[2][2] * z];
+      gameObject.transform.position.x += finalWorldTranslateVector[0];
+      gameObject.transform.position.y += finalWorldTranslateVector[1];
+      gameObject.transform.position.z += finalWorldTranslateVector[2];
+    }
+    lookAtPositionInternal(gameObjectIdentifier, x, y, z) {
+      const gameObject = this.getStudentGameObject(gameObjectIdentifier);
+      const deltaVector = normalizeVector(new Vector3(x - gameObject.transform.position.x, y - gameObject.transform.position.y, z - gameObject.transform.position.z));
+      const eulerX = Math.asin(-deltaVector.y);
+      const eulerY = Math.atan2(deltaVector.x, deltaVector.z);
+      gameObject.transform.rotation.x = eulerX * 180 / Math.PI;
+      gameObject.transform.rotation.y = eulerY * 180 / Math.PI;
+      gameObject.transform.rotation.z = 0;
+    }
+    gameObjectDistanceInternal(gameObjectIdentifier_A, gameObjectIdentifier_B) {
+      const gameObjectA = this.getStudentGameObject(gameObjectIdentifier_A);
+      const gameObjectB = this.getStudentGameObject(gameObjectIdentifier_B);
+      return pointDistance(gameObjectA.transform.position, gameObjectB.transform.position);
+    }
     rotateWorldInternal(gameObjectIdentifier, x, y, z) {
       const gameObject = this.getStudentGameObject(gameObjectIdentifier);
       gameObject.transform.rotation.x += x;
       gameObject.transform.rotation.y += y;
       gameObject.transform.rotation.z += z;
+    }
+    copyTransformPropertiesInternal(propName, from, to, delta_x, delta_y, delta_z) {
+      const fromGameObject = this.getStudentGameObject(from);
+      const toGameObject = this.getStudentGameObject(to);
+      if (Math.abs(delta_x) !== Infinity) toGameObject.transform[propName].x = fromGameObject.transform[propName].x + delta_x;
+      if (Math.abs(delta_y) !== Infinity) toGameObject.transform[propName].y = fromGameObject.transform[propName].y + delta_y;
+      if (Math.abs(delta_z) !== Infinity) toGameObject.transform[propName].z = fromGameObject.transform[propName].z + delta_z;
     }
     getKeyState(keyCode) {
       return this.input.keyboardInputInfo[keyCode];
@@ -34790,16 +34931,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         throw new Error(`Trying to duplicately apply rigidbody on GameObject ${gameObjectIdentifier.gameObjectIdentifier}`);
       }
       gameObject.rigidbody = {
-        velocity: {
-          x: 0,
-          y: 0,
-          z: 0
-        },
-        angularVelocity: {
-          x: 0,
-          y: 0,
-          z: 0
-        },
+        velocity: zeroVector(),
+        angularVelocity: zeroVector(),
         mass: 1,
         useGravity: true,
         drag: 0,
@@ -34856,23 +34989,34 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       const gameObject = this.getStudentGameObject(gameObjectIdentifier);
       gameObject.onCollisionExitMethod = eventFunction;
     }
-    onGUI_Label(content, x, y) {
+    requestForMainCameraControlInternal() {
+      const name = "MainCamera";
+      if (this.studentGameObjectStorage[name] !== void 0) {
+        return this.getGameObjectIdentifierForPrimitiveGameObject("MainCamera");
+      }
+      this.makeGameObjectDataStorage(name);
+      this.dispatchStudentAction("requestMainCameraControl");
+      return this.getGameObjectIdentifierForPrimitiveGameObject("MainCamera");
+    }
+    onGUI_Label(content, x, y, fontSize) {
       content = content.replaceAll("|", "");
       const newLabel = {
         type: "label",
         content,
         x,
-        y
+        y,
+        fontSize
       };
       this.guiData.push(newLabel);
     }
-    onGUI_Button(text, x, y, onClick) {
+    onGUI_Button(text, x, y, fontSize, onClick) {
       text = text.replaceAll("|", "");
       const newButton = {
         type: "button",
         text,
         x,
         y,
+        fontSize,
         onClick
       };
       this.guiData.push(newButton);
@@ -34883,34 +35027,41 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       if (newTargetFrameRate > 120) return;
       this.targetFrameRate = newTargetFrameRate;
     }
+    setCustomPropertyInternal(gameObjectIdentifier, propName, value) {
+      const gameObject = this.getStudentGameObject(gameObjectIdentifier);
+      gameObject.customProperties[propName] = value;
+    }
+    getCustomPropertyInternal(gameObjectIdentifier, propName) {
+      const gameObject = this.getStudentGameObject(gameObjectIdentifier);
+      return gameObject.customProperties[propName];
+    }
     getTargetFrameRate() {
       return this.targetFrameRate;
     }
   };
   function initializeModule(dimensionMode) {
-    let INSTANCE = getInstance();
-    if (INSTANCE !== void 0) {
-      if (!INSTANCE.isUnityInstanceReady()) {
+    let instance = getInstance();
+    if (instance !== void 0) {
+      if (!instance.isUnityInstanceReady()) {
         throw new Error("Unity instance is not ready to accept a new Source program now. Please try again later.");
       }
-      if (INSTANCE.unityInstance === null) {
-        INSTANCE.reloadUnityAcademyInstanceAfterTermination();
+      if (instance.unityInstance === null) {
+        instance.reloadUnityAcademyInstanceAfterTermination();
       }
-      INSTANCE.dimensionMode = dimensionMode;
-      INSTANCE.reset();
+      instance.dimensionMode = dimensionMode;
+      instance.reset();
       return;
     }
-    INSTANCE = new UnityAcademyJsInteropContext();
-    INSTANCE.dimensionMode = dimensionMode;
+    instance = new UnityAcademyJsInteropContext();
+    instance.dimensionMode = dimensionMode;
   }
-  import_context.default.moduleContexts.unity_academy.state = null;
   function init_unity_academy_2d() {
     initializeModule("2d");
   }
   function init_unity_academy_3d() {
     initializeModule("3d");
   }
-  function checkUnityEngineStatus() {
+  function checkUnityAcademyExistence() {
     if (getInstance() === void 0) {
       throw new Error("Unity module is not initialized, please call init_unity_academy_3d / init_unity_academy_2d first before calling this function");
     }
@@ -34930,14 +35081,19 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       throw new Error("Trying to use a GameObject that is already destroyed.");
     }
   }
-  function checkParameterType(parameter, expectedType) {
+  function checkParameterType(parameter, expectedType, numberAllowInfinity = false) {
     const actualType = typeof parameter;
     if (actualType !== expectedType) {
       throw new Error(`Wrong parameter type: expected ${expectedType}, but got ${actualType}`);
     }
+    if (actualType.toString() === "number") {
+      if (!numberAllowInfinity && (parameter === Infinity || parameter === -Infinity)) {
+        throw new Error("Wrong parameter type: expected a finite number, but got Infinity or -Infinity");
+      }
+    }
   }
   function same_gameobject(first, second) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     const instance = getInstance();
     if (!(first instanceof instance.gameObjectIdentifierWrapperClass) || !(second instanceof instance.gameObjectIdentifierWrapperClass)) {
       return false;
@@ -34945,45 +35101,50 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     return first.gameObjectIdentifier === second.gameObjectIdentifier;
   }
   function set_start(gameObjectIdentifier, startFunction) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(startFunction, "function");
     getInstance().setStartInternal(gameObjectIdentifier, startFunction);
   }
   function set_update(gameObjectIdentifier, updateFunction) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(updateFunction, "function");
     getInstance().setUpdateInternal(gameObjectIdentifier, updateFunction);
   }
   function instantiate(prefab_name) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkIs3DMode();
     checkParameterType(prefab_name, "string");
     return getInstance().instantiateInternal(prefab_name);
   }
   function instantiate_sprite(sourceImageUrl) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkIs2DMode();
     checkParameterType(sourceImageUrl, "string");
     return getInstance().instantiate2DSpriteUrlInternal(sourceImageUrl);
   }
+  function instantiate_empty() {
+    checkUnityAcademyExistence();
+    checkIs3DMode();
+    return getInstance().instantiateEmptyGameObjectInternal();
+  }
   function delta_time() {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     return getInstance().getDeltaTime();
   }
   function destroy(gameObjectIdentifier) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     getInstance().destroyGameObjectInternal(gameObjectIdentifier);
   }
   function get_position(gameObjectIdentifier) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     return getInstance().getGameObjectTransformProp("position", gameObjectIdentifier);
   }
   function set_position(gameObjectIdentifier, x, y, z) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(x, "number");
     checkParameterType(y, "number");
@@ -34991,12 +35152,12 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     return getInstance().setGameObjectTransformProp("position", gameObjectIdentifier, x, y, z);
   }
   function get_rotation_euler(gameObjectIdentifier) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     return getInstance().getGameObjectTransformProp("rotation", gameObjectIdentifier);
   }
   function set_rotation_euler(gameObjectIdentifier, x, y, z) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(x, "number");
     checkParameterType(y, "number");
@@ -35004,12 +35165,12 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     return getInstance().setGameObjectTransformProp("rotation", gameObjectIdentifier, x, y, z);
   }
   function get_scale(gameObjectIdentifier) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     return getInstance().getGameObjectTransformProp("scale", gameObjectIdentifier);
   }
   function set_scale(gameObjectIdentifier, x, y, z) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(x, "number");
     checkParameterType(y, "number");
@@ -35017,20 +35178,70 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     return getInstance().setGameObjectTransformProp("scale", gameObjectIdentifier, x, y, z);
   }
   function translate_world(gameObjectIdentifier, x, y, z) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(x, "number");
     checkParameterType(y, "number");
     checkParameterType(z, "number");
     return getInstance().translateWorldInternal(gameObjectIdentifier, x, y, z);
   }
+  function translate_local(gameObjectIdentifier, x, y, z) {
+    checkUnityAcademyExistence();
+    checkGameObjectIdentifierParameter(gameObjectIdentifier);
+    checkParameterType(x, "number");
+    checkParameterType(y, "number");
+    checkParameterType(z, "number");
+    return getInstance().translateLocalInternal(gameObjectIdentifier, x, y, z);
+  }
   function rotate_world(gameObjectIdentifier, x, y, z) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(x, "number");
     checkParameterType(y, "number");
     checkParameterType(z, "number");
     return getInstance().rotateWorldInternal(gameObjectIdentifier, x, y, z);
+  }
+  function copy_position(from, to, delta_x, delta_y, delta_z) {
+    checkUnityAcademyExistence();
+    checkGameObjectIdentifierParameter(from);
+    checkGameObjectIdentifierParameter(to);
+    checkParameterType(delta_x, "number", true);
+    checkParameterType(delta_y, "number", true);
+    checkParameterType(delta_z, "number", true);
+    return getInstance().copyTransformPropertiesInternal("position", from, to, delta_x, delta_y, delta_z);
+  }
+  function copy_rotation(from, to, delta_x, delta_y, delta_z) {
+    checkUnityAcademyExistence();
+    checkGameObjectIdentifierParameter(from);
+    checkGameObjectIdentifierParameter(to);
+    checkParameterType(delta_x, "number", true);
+    checkParameterType(delta_y, "number", true);
+    checkParameterType(delta_z, "number", true);
+    return getInstance().copyTransformPropertiesInternal("rotation", from, to, delta_x, delta_y, delta_z);
+  }
+  function copy_scale(from, to, delta_x, delta_y, delta_z) {
+    checkUnityAcademyExistence();
+    checkGameObjectIdentifierParameter(from);
+    checkGameObjectIdentifierParameter(to);
+    checkParameterType(delta_x, "number", true);
+    checkParameterType(delta_y, "number", true);
+    checkParameterType(delta_z, "number", true);
+    return getInstance().copyTransformPropertiesInternal("scale", from, to, delta_x, delta_y, delta_z);
+  }
+  function look_at(gameObjectIdentifier, x, y, z) {
+    checkUnityAcademyExistence();
+    checkIs3DMode();
+    checkGameObjectIdentifierParameter(gameObjectIdentifier);
+    checkParameterType(x, "number");
+    checkParameterType(y, "number");
+    checkParameterType(z, "number");
+    getInstance().lookAtPositionInternal(gameObjectIdentifier, x, y, z);
+  }
+  function gameobject_distance(gameObjectIdentifier_A, gameObjectIdentifier_B) {
+    checkUnityAcademyExistence();
+    checkGameObjectIdentifierParameter(gameObjectIdentifier_A);
+    checkGameObjectIdentifierParameter(gameObjectIdentifier_B);
+    return getInstance().gameObjectDistanceInternal(gameObjectIdentifier_A, gameObjectIdentifier_B);
   }
   function checkKeyCodeValidityAndToLowerCase(keyCode) {
     if (typeof keyCode !== "string") throw new Error(`Key code must be a string! Given type: ${typeof keyCode}`);
@@ -35044,51 +35255,51 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     return keyCode;
   }
   function get_key_down(keyCode) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     keyCode = checkKeyCodeValidityAndToLowerCase(keyCode);
     return getInstance().getKeyState(keyCode) === 1;
   }
   function get_key(keyCode) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     keyCode = checkKeyCodeValidityAndToLowerCase(keyCode);
     const keyState = getInstance().getKeyState(keyCode);
     return keyState === 1 || keyState === 2 || keyState === 3;
   }
   function get_key_up(keyCode) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     keyCode = checkKeyCodeValidityAndToLowerCase(keyCode);
     return getInstance().getKeyState(keyCode) === 3;
   }
   function play_animator_state(gameObjectIdentifier, animatorStateName) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkIs3DMode();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(animatorStateName, "string");
     getInstance().playAnimatorStateInternal(gameObjectIdentifier, animatorStateName);
   }
   function apply_rigidbody(gameObjectIdentifier) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     getInstance().applyRigidbodyInternal(gameObjectIdentifier);
   }
   function get_mass(gameObjectIdentifier) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     return getInstance().getRigidbodyNumericalProp("mass", gameObjectIdentifier);
   }
   function set_mass(gameObjectIdentifier, mass) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(mass, "number");
     getInstance().setRigidbodyNumericalProp("mass", gameObjectIdentifier, mass);
   }
   function get_velocity(gameObjectIdentifier) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     return getInstance().getRigidbodyVelocityVector3Prop("velocity", gameObjectIdentifier);
   }
   function set_velocity(gameObjectIdentifier, x, y, z) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(x, "number");
     checkParameterType(y, "number");
@@ -35096,12 +35307,12 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     getInstance().setRigidbodyVelocityVector3Prop("velocity", gameObjectIdentifier, x, y, z);
   }
   function get_angular_velocity(gameObjectIdentifier) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     return getInstance().getRigidbodyVelocityVector3Prop("angularVelocity", gameObjectIdentifier);
   }
   function set_angular_velocity(gameObjectIdentifier, x, y, z) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(x, "number");
     checkParameterType(y, "number");
@@ -35109,25 +35320,25 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     getInstance().setRigidbodyVelocityVector3Prop("angularVelocity", gameObjectIdentifier, x, y, z);
   }
   function set_drag(gameObjectIdentifier, value) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(value, "number");
     getInstance().setRigidbodyNumericalProp("drag", gameObjectIdentifier, value);
   }
   function set_angular_drag(gameObjectIdentifier, value) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(value, "number");
     getInstance().setRigidbodyNumericalProp("angularDrag", gameObjectIdentifier, value);
   }
   function set_use_gravity(gameObjectIdentifier, useGravity) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(useGravity, "boolean");
     getInstance().setUseGravityInternal(gameObjectIdentifier, useGravity);
   }
   function add_impulse_force(gameObjectIdentifier, x, y, z) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(x, "number");
     checkParameterType(y, "number");
@@ -35135,31 +35346,118 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     getInstance().addImpulseForceInternal(gameObjectIdentifier, x, y, z);
   }
   function remove_collider_components(gameObjectIdentifier) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     getInstance().removeColliderComponentsInternal(gameObjectIdentifier);
   }
   function on_collision_enter(gameObjectIdentifier, eventFunction) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(eventFunction, "function");
     getInstance().setOnCollisionEnterInternal(gameObjectIdentifier, eventFunction);
   }
   function on_collision_stay(gameObjectIdentifier, eventFunction) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(eventFunction, "function");
     getInstance().setOnCollisionStayInternal(gameObjectIdentifier, eventFunction);
   }
   function on_collision_exit(gameObjectIdentifier, eventFunction) {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     checkGameObjectIdentifierParameter(gameObjectIdentifier);
     checkParameterType(eventFunction, "function");
     getInstance().setOnCollisionExitInternal(gameObjectIdentifier, eventFunction);
   }
+  function gui_label(content, x, y, fontSize) {
+    checkUnityAcademyExistence();
+    checkParameterType(content, "string");
+    checkParameterType(x, "number");
+    checkParameterType(y, "number");
+    checkParameterType(fontSize, "number");
+    getInstance().onGUI_Label(content, x, y, fontSize);
+  }
+  function gui_button(text, x, y, fontSize, onClick) {
+    checkUnityAcademyExistence();
+    checkParameterType(text, "string");
+    checkParameterType(x, "number");
+    checkParameterType(y, "number");
+    checkParameterType(fontSize, "number");
+    checkParameterType(onClick, "function");
+    getInstance().onGUI_Button(text, x, y, fontSize, onClick);
+  }
   function get_main_camera_following_target() {
-    checkUnityEngineStatus();
+    checkUnityAcademyExistence();
     return getInstance().getGameObjectIdentifierForPrimitiveGameObject("MainCameraFollowingTarget");
+  }
+  function request_for_main_camera_control() {
+    checkUnityAcademyExistence();
+    return getInstance().requestForMainCameraControlInternal();
+  }
+  function set_custom_prop(gameObjectIdentifier, propName, value) {
+    checkUnityAcademyExistence();
+    checkGameObjectIdentifierParameter(gameObjectIdentifier);
+    checkParameterType(propName, "string");
+    getInstance().setCustomPropertyInternal(gameObjectIdentifier, propName, value);
+  }
+  function get_custom_prop(gameObjectIdentifier, propName) {
+    checkUnityAcademyExistence();
+    checkGameObjectIdentifierParameter(gameObjectIdentifier);
+    checkParameterType(propName, "string");
+    return getInstance().getCustomPropertyInternal(gameObjectIdentifier, propName);
+  }
+  function vector3(x, y, z) {
+    checkParameterType(x, "number");
+    checkParameterType(y, "number");
+    checkParameterType(z, "number");
+    return makeVector3D(x, y, z);
+  }
+  function get_x(vector) {
+    checkVector3Parameter(vector);
+    return vector.x;
+  }
+  function get_y(vector) {
+    checkVector3Parameter(vector);
+    return vector.y;
+  }
+  function get_z(vector) {
+    checkVector3Parameter(vector);
+    return vector.z;
+  }
+  function scale_vector(vector, factor) {
+    checkVector3Parameter(vector);
+    checkParameterType(factor, "number");
+    return scaleVector(vector, factor);
+  }
+  function add_vector(vectorA, vectorB) {
+    checkVector3Parameter(vectorA);
+    checkVector3Parameter(vectorB);
+    return addVector(vectorA, vectorB);
+  }
+  function dot(vectorA, vectorB) {
+    checkVector3Parameter(vectorA);
+    checkVector3Parameter(vectorB);
+    return dotProduct(vectorA, vectorB);
+  }
+  function cross(vectorA, vectorB) {
+    checkVector3Parameter(vectorA);
+    checkVector3Parameter(vectorB);
+    return crossProduct(vectorA, vectorB);
+  }
+  function normalize(vector) {
+    checkVector3Parameter(vector);
+    return normalizeVector(vector);
+  }
+  function magnitude(vector) {
+    checkVector3Parameter(vector);
+    return vectorMagnitude(vector);
+  }
+  function zero_vector() {
+    return zeroVector();
+  }
+  function point_distance(pointA, pointB) {
+    checkVector3Parameter(pointA);
+    checkVector3Parameter(pointB);
+    return pointDistance(pointA, pointB);
   }
   return __toCommonJS(unity_academy_exports);
 }
