@@ -1,4 +1,4 @@
-require => {
+export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -36,17 +36,19 @@ require => {
   var repl_exports = {};
   __export(repl_exports, {
     default_js_slang: () => default_js_slang,
-    module_display: () => module_display,
+    repl_display: () => repl_display,
     set_background_image: () => set_background_image,
     set_evaluator: () => set_evaluator,
-    set_font_size: () => set_font_size
+    set_font_size: () => set_font_size,
+    set_program_text: () => set_program_text
   });
   var import_context2 = __toESM(__require("js-slang/context"), 1);
-  var import_context = __toESM(__require("js-slang/context"), 1);
-  function default_js_slang(_program) {
-    throw new Error(`Invaild Call: Function "default_js_slang" can not be directly called by user's code in editor. You should use it as the parameter of the function "set_evaluator"`);
-  }
+  var COLOR_REPL_DISPLAY_DEFAULT = "cyan";
+  var COLOR_RUN_CODE_RESULT = "white";
+  var COLOR_ERROR_MESSAGE = "red";
+  var DEFAULT_EDITOR_HEIGHT = 375;
   var import_js_slang = __require("js-slang");
+  var import_context = __toESM(__require("js-slang/context"), 1);
   var ProgrammableRepl = class {
     constructor() {
       this.customizedEditorProps = {
@@ -58,12 +60,14 @@ require => {
       this.userCodeInEditor = this.getSavedEditorContent();
       this.outputStrings = [];
       this._editorInstance = null;
+      this.editorHeight = DEFAULT_EDITOR_HEIGHT;
       developmentLog(this);
     }
     InvokeREPL_Internal(evalFunc) {
       this.evalFunction = evalFunc;
     }
     runCode() {
+      var _a;
       this.outputStrings = [];
       let retVal;
       try {
@@ -73,19 +77,19 @@ require => {
           retVal = this.evalFunction(this.userCodeInEditor);
         }
       } catch (exception) {
-        console.log(exception);
-        this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${exception.error.message}`, "red");
+        developmentLog(exception);
+        if (exception.location.start.line === -1 && exception.error === void 0) {
+          this.pushOutputString("Error: Unable to use your evaluator to run the code. Does your evaluator entry function contain and only contain exactly one parameter?", COLOR_ERROR_MESSAGE);
+        } else {
+          this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${(_a = exception.error) == null ? void 0 : _a.message}`, COLOR_ERROR_MESSAGE);
+        }
         this.reRenderTab();
         return;
       }
-      if (retVal === void 0) {
-        this.pushOutputString("Program exit with undefined return value.", "cyan");
-      } else {
-        if (typeof retVal === "string") {
-          retVal = `"${retVal}"`;
-        }
-        this.pushOutputString(`Program exit with return value ${retVal}`, "cyan");
+      if (typeof retVal === "string") {
+        retVal = `"${retVal}"`;
       }
+      this.pushOutputString(retVal, COLOR_RUN_CODE_RESULT);
       this.reRenderTab();
       developmentLog("RunCode finished");
     }
@@ -93,8 +97,8 @@ require => {
       this.userCodeInEditor = code;
     }
     pushOutputString(content, textColor, outputMethod = "plaintext") {
-      let tmp = {
-        content,
+      const tmp = {
+        content: content === void 0 ? "undefined" : content === null ? "null" : content,
         color: textColor,
         outputMethod
       };
@@ -177,8 +181,8 @@ require => {
     userStringSafeCheck(str) {
       developmentLog(`Safe check on ${str}`);
       const tmp = str.toLowerCase();
-      let forbiddenWords = ["\\", "<", ">", "script", "javascript", "eval", "document", "window", "console", "location"];
-      for (let word of forbiddenWords) {
+      const forbiddenWords = ["\\", "<", ">", "script", "javascript", "eval", "document", "window", "console", "location"];
+      for (const word of forbiddenWords) {
         if (tmp.indexOf(word) !== -1) {
           return word;
         }
@@ -194,27 +198,27 @@ require => {
         throwInfiniteLoops: true,
         useSubst: false
       };
-      import_context.default.prelude = "const display=(x)=>module_display(x);";
+      import_context.default.prelude = "const display=(x)=>repl_display(x);";
       import_context.default.errors = [];
       const sourceFile = {
         "/ReplModuleUserCode.js": code
       };
       (0, import_js_slang.runFilesInContext)(sourceFile, "/ReplModuleUserCode.js", import_context.default, options).then(evalResult => {
-        if (evalResult.status === "suspended" || evalResult.status === "suspended-ec-eval") {
+        if (evalResult.status === "suspended" || evalResult.status === "suspended-cse-eval") {
           throw new Error("This should not happen");
         }
         if (evalResult.status !== "error") {
-          this.pushOutputString("js-slang program finished with value:", "cyan");
-          this.pushOutputString(evalResult.value === void 0 ? "undefined" : evalResult.value.toString(), "cyan");
+          this.pushOutputString("js-slang program finished with value:", COLOR_RUN_CODE_RESULT);
+          this.pushOutputString(evalResult.value === void 0 ? "undefined" : evalResult.value.toString(), COLOR_RUN_CODE_RESULT);
         } else {
           const errors = import_context.default.errors;
           console.log(errors);
           const errorCount = errors.length;
           for (let i = 0; i < errorCount; i++) {
             const error = errors[i];
-            if (error.explain().indexOf("Name module_display not declared.") !== -1) {
-              this.pushOutputString(`[Error] It seems that you haven't import the function "module_display" correctly when calling "set_evaluator" in Source Academy's main editor.`, "red");
-            } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, "red");
+            if (error.explain().indexOf("Name repl_display not declared.") !== -1) {
+              this.pushOutputString(`[Error] It seems that you haven't import the function "repl_display" correctly when calling "set_evaluator" in Source Academy's main editor.`, COLOR_ERROR_MESSAGE);
+            } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, COLOR_ERROR_MESSAGE);
           }
         }
         this.reRenderTab();
@@ -234,16 +238,13 @@ require => {
       this.reRenderTab();
     }
     getSavedEditorContent() {
-      let savedContent = localStorage.getItem("programmable_repl_saved_editor_code");
+      const savedContent = localStorage.getItem("programmable_repl_saved_editor_code");
       if (savedContent === null) return "";
       return savedContent;
     }
     easterEggFunction() {
-      this.pushOutputString("[Author (Wang Zihan)] \u2764<span style='font-weight:bold;'>I love Keqing and Ganyu.</span>\u2764", "pink", "richtext");
-      this.pushOutputString(`<span style='font-style:italic;'>Showing my love to my favorite girls through a SA module, is that the so-called "romance of a programmer"?</span>`, "gray", "richtext");
-      this.pushOutputString("\u2764\u2764\u2764\u2764\u2764", "pink");
       this.pushOutputString("<br>", "white", "richtext");
-      this.pushOutputString("If you see this, please check whether you have called <span style='font-weight:bold;font-style:italic;'>invoke_repl</span> function with the correct parameter before using the Programmable Repl Tab.", "yellow", "richtext");
+      this.pushOutputString("If you see this, please check whether you have called <span style='font-weight:bold;font-style:italic;'>set_evaluator</span> function with the correct parameter before using the Programmable Repl Tab.", "yellow", "richtext");
       return "Easter Egg!";
     }
   };
@@ -260,9 +261,9 @@ require => {
       toReplString: () => "<Programmable Repl Initialized>"
     };
   }
-  function module_display(content) {
+  function repl_display(content) {
     if (INSTANCE.richDisplayInternal(content) === "not_rich_text_pair") {
-      INSTANCE.pushOutputString(content.toString(), "white", "plaintext");
+      INSTANCE.pushOutputString(content.toString(), COLOR_REPL_DISPLAY_DEFAULT, "plaintext");
       return content;
     }
     return void 0;
@@ -274,5 +275,11 @@ require => {
   function set_font_size(font_size_px) {
     INSTANCE.customizedEditorProps.fontSize = parseInt(font_size_px.toString());
   }
+  function set_program_text(text) {
+    INSTANCE.updateUserCode(text);
+  }
+  function default_js_slang(_program) {
+    throw new Error(`Invaild Call: Function "default_js_slang" can not be directly called by user's code in editor. You should use it as the parameter of the function "set_evaluator"`);
+  }
   return __toCommonJS(repl_exports);
-}
+};
